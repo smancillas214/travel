@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italy & Dolomites 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f7f6f3;
+    --bg-tertiary: #f0efe9;
+    --text: #1a1a18;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #8a8a85;
+    --border: rgba(0,0,0,0.10);
+    --border-secondary: rgba(0,0,0,0.18);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --teal-bg: #E1F5EE; --teal-text: #0F6E56;
+    --amber-bg: #FAEEDA; --amber-text: #854F0B;
+    --coral-bg: #FAECE7; --coral-text: #993C1D;
+    --blue-bg: #E6F1FB; --blue-text: #185FA5;
+    --purple-bg: #EEEDFE; --purple-text: #3C3489;
+    --green-bg: #EAF3DE; --green-text: #3B6D11;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c;
+      --bg-secondary: #272725;
+      --bg-tertiary: #2e2e2b;
+      --text: #f0efe9;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --border: rgba(255,255,255,0.10);
+      --border-secondary: rgba(255,255,255,0.18);
+      --teal-bg: #085041; --teal-text: #9FE1CB;
+      --amber-bg: #633806; --amber-text: #FAC775;
+      --coral-bg: #4A1B0C; --coral-text: #F5C4B3;
+      --blue-bg: #042C53; --blue-text: #B5D4F4;
+      --purple-bg: #26215C; --purple-text: #CECBF6;
+      --green-bg: #173404; --green-text: #C0DD97;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-tertiary);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── Header ── */
+  .header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .trip-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .trip-dates {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+  }
+
+  .trip-vibe {
+    font-size: 14px;
+    color: var(--text-secondary);
+    max-width: 680px;
+    line-height: 1.7;
+  }
+
+  /* ── Section ── */
+  .section { margin-bottom: 3rem; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+  }
+
+  /* ── Day Cards ── */
+  .day-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .day-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .day-card.driving {
+    border-left: 2.5px solid #5DCAA5;
+  }
+
+  .day-main {
+    display: grid;
+    grid-template-columns: 48px 28px 1fr 1fr 1.1fr 120px;
+    gap: 12px;
+    align-items: start;
+    padding: 14px 16px;
+  }
+
+  .day-num {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .day-date-sm {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+  }
+
+  /* Status dot */
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .status-dot.confirmed { background: #5DCAA5; }
+  .status-dot.loose { background: #EF9F27; }
+  .status-dot.tbd { background: var(--border-secondary); }
+
+  .col-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 3px;
+  }
+
+  .col-val { font-size: 13px; color: var(--text); }
+  .col-muted { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  .drive-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--teal-text);
+    background: var(--teal-bg);
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+
+  .nearby-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 9px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .nearby-btn:hover { background: var(--bg-tertiary); color: var(--text-secondary); }
+  .nearby-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: transparent; }
+
+  /* Driving expand */
+  .drive-expand-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px 10px;
+    border-top: 0.5px solid var(--border);
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    user-select: none;
+    background: var(--bg-secondary);
+  }
+  .drive-expand-toggle:hover { color: var(--text-secondary); }
+
+  .drive-expand-toggle .chevron {
+    transition: transform 0.2s;
+    font-size: 14px;
+  }
+  .drive-expand-toggle.open .chevron { transform: rotate(180deg); }
+
+  .drive-detail {
+    display: none;
+    padding: 12px 16px 14px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-secondary);
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .drive-detail.open { display: block; }
+
+  .drive-detail .route-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  .drive-detail .stops { margin-top: 8px; }
+  .drive-detail .stop-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+  .drive-detail .stop-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  /* Column headers for day table */
+  .day-col-headers {
+    display: grid;
+    grid-template-columns: 48px 28px 1fr 1fr 1.1fr 120px;
+    gap: 12px;
+    padding: 0 16px 8px;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+  }
+
+  /* ── Recommendations ── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    align-items: center;
+  }
+
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-divider {
+    width: 0.5px;
+    height: 18px;
+    background: var(--border-secondary);
+    margin: 0 4px;
+  }
+
+  .filter-pill {
+    font-size: 12px;
+    padding: 4px 11px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border-secondary);
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .filter-pill:hover { background: var(--bg-secondary); }
+  .filter-pill.active { border-color: transparent; font-weight: 500; }
+  .filter-pill.city-rome.active { background: var(--coral-bg); color: var(--coral-text); }
+  .filter-pill.city-bologna.active { background: var(--amber-bg); color: var(--amber-text); }
+  .filter-pill.city-venice.active { background: var(--teal-bg); color: var(--teal-text); }
+  .filter-pill.city-dolomites.active { background: var(--blue-bg); color: var(--blue-text); }
+  .filter-pill.city-all.active,
+  .filter-pill.type-all.active { background: var(--bg-tertiary); color: var(--text); border-color: var(--border-secondary); }
+  .filter-pill.type-restaurant.active { background: var(--coral-bg); color: var(--coral-text); }
+  .filter-pill.type-bar.active { background: var(--purple-bg); color: var(--purple-text); }
+  .filter-pill.type-coffee.active { background: var(--amber-bg); color: var(--amber-text); }
+  .filter-pill.type-stop.active { background: var(--green-bg); color: var(--green-text); }
+
+  /* Rec table */
+  .rec-table-wrap {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .rec-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .rec-table th {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-secondary);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .rec-table th:hover { color: var(--text-secondary); }
+  .rec-table th.sorted { color: var(--text); }
+  .sort-arrow { margin-left: 4px; opacity: 0.5; }
+  .rec-table th.sorted .sort-arrow { opacity: 1; }
+
+  .rec-table td {
+    padding: 11px 12px;
+    border-bottom: 0.5px solid var(--border);
+    vertical-align: top;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .rec-table tr:last-child td { border-bottom: none; }
+  .rec-table tr { transition: background 0.1s; }
+  .rec-table tr:hover td { background: var(--bg-secondary); }
+
+  /* star */
+  .star-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    line-height: 1;
+    color: var(--text-tertiary);
+    transition: color 0.15s, transform 0.15s;
+  }
+  .star-btn:hover { transform: scale(1.15); }
+  .star-btn.starred { color: #EF9F27; }
+
+  /* type badge */
+  .type-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-restaurant { background: var(--coral-bg); color: var(--coral-text); }
+  .badge-bar { background: var(--purple-bg); color: var(--purple-text); }
+  .badge-coffee { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-stop { background: var(--green-bg); color: var(--green-text); }
+
+  .city-tag { font-size: 12px; color: var(--text-secondary); }
+
+  .rec-name { font-weight: 500; color: var(--text); }
+  .rec-notes-cell { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .rec-by { font-size: 12px; color: var(--text-tertiary); }
+
+  .no-results {
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 13px;
+  }
+
+  /* col widths */
+  .col-star { width: 40px; text-align: center; }
+  .col-type { width: 110px; }
+  .col-location { width: 110px; }
+  .col-name { width: 170px; }
+  .col-by { width: 100px; }
+  .col-notes { }
+
+  /* ── Notes ── */
+  .notes-area {
+    width: 100%;
+    min-height: 160px;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    resize: vertical;
+    line-height: 1.7;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .notes-area:focus { border-color: var(--border-secondary); }
+  .notes-hint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <h1 class="trip-title">Italy &amp; Dolomites</h1>
+    <p class="trip-dates">July 2026 &nbsp;·&nbsp; ~12 days</p>
+    <p class="trip-vibe">
+      A road trip through northern Italy — Rome for the first few days to shake off the jet lag and get into the rhythm, then north through Bologna and Venice before pushing into the Dolomites for the back half. The goal is to move slowly, eat well, and drive the kind of roads that make you pull over.
+    </p>
+  </header>
+
+  <!-- ── DAY BY DAY ── -->
+  <section class="section">
+    <div class="section-label">Day by day</div>
+
+    <div class="day-col-headers">
+      <div>#</div>
+      <div></div>
+      <div>Location</div>
+      <div>Lodging</div>
+      <div>Notes</div>
+      <div></div>
+    </div>
+
+    <div class="day-list" id="dayList">
+
+      <!-- Day 1 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">01</div>
+            <div class="day-date-sm">Jul 1</div>
+          </div>
+          <div><span class="status-dot confirmed" title="Confirmed"></span></div>
+          <div>
+            <div class="col-val">Rome</div>
+            <div class="col-muted">Arrive FCO — settle in</div>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Rome</div>
+          </div>
+          <div class="col-muted">Easy arrival day. Walk the neighborhood, find a bar, early dinner.</div>
+          <div><button class="nearby-btn" data-city="rome" onclick="filterNearby(this)">Rome picks</button></div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">02</div>
+            <div class="day-date-sm">Jul 2</div>
+          </div>
+          <div><span class="status-dot confirmed" title="Confirmed"></span></div>
+          <div>
+            <div class="col-val">Rome</div>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Rome</div>
+          </div>
+          <div class="col-muted">Full day in the city. Trastevere in the morning, aperitivo in the evening.</div>
+          <div><button class="nearby-btn" data-city="rome" onclick="filterNearby(this)">Rome picks</button></div>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">03</div>
+            <div class="day-date-sm">Jul 3</div>
+          </div>
+          <div><span class="status-dot confirmed" title="Confirmed"></span></div>
+          <div>
+            <div class="col-val">Rome</div>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Rome</div>
+          </div>
+          <div class="col-muted">Last Rome day. Morning at a museum, afternoon slow.</div>
+          <div><button class="nearby-btn" data-city="rome" onclick="filterNearby(this)">Rome picks</button></div>
+        </div>
+      </div>
+
+      <!-- Day 4 — driving day -->
+      <div class="day-card driving">
+        <div class="day-main">
+          <div>
+            <div class="day-num">04</div>
+            <div class="day-date-sm">Jul 4</div>
+          </div>
+          <div><span class="status-dot loose" title="Loose"></span></div>
+          <div>
+            <div class="col-val">Rome → Bologna</div>
+            <span class="drive-badge">&#9654; 3h 30m · A1</span>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Bologna</div>
+          </div>
+          <div class="col-muted">Drive mid-morning. Arrive Bologna for lunch. Afternoon in the porticoes.</div>
+          <div><button class="nearby-btn" data-city="bologna" onclick="filterNearby(this)">Bologna picks</button></div>
+        </div>
+        <div class="drive-expand-toggle" onclick="toggleDrive(this)">
+          <span class="chevron">&#8964;</span>
+          <span>Route detail</span>
+        </div>
+        <div class="drive-detail">
+          <div class="route-line">Rome (FCO area) → Bologna &nbsp;·&nbsp; ~3h 30m &nbsp;·&nbsp; A1 Autostrada</div>
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 8px;">Straightforward motorway run north. No mountain roads — save legs for the Dolomites.</div>
+          <div class="stops">
+            <div class="stop-item"><span class="stop-dot"></span><span>Consider a coffee stop in Florence (Firenze) — 2h in, worth 30 min off the motorway if energy allows</span></div>
+            <div class="stop-item"><span class="stop-dot"></span><span>Bologna ring road can back up afternoon — aim to arrive before 2pm</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 5 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">05</div>
+            <div class="day-date-sm">Jul 5</div>
+          </div>
+          <div><span class="status-dot loose" title="Loose"></span></div>
+          <div>
+            <div class="col-val">Bologna</div>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Bologna</div>
+          </div>
+          <div class="col-muted">Food city. Mercato di Mezzo in the morning, long lunch, the towers.</div>
+          <div><button class="nearby-btn" data-city="bologna" onclick="filterNearby(this)">Bologna picks</button></div>
+        </div>
+      </div>
+
+      <!-- Day 6 — driving day -->
+      <div class="day-card driving">
+        <div class="day-main">
+          <div>
+            <div class="day-num">06</div>
+            <div class="day-date-sm">Jul 6</div>
+          </div>
+          <div><span class="status-dot loose" title="Loose"></span></div>
+          <div>
+            <div class="col-val">Bologna → Venice</div>
+            <span class="drive-badge">&#9654; 2h 15m · A13</span>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Venice (Mestre)</div>
+          </div>
+          <div class="col-muted">Short drive. Park in Mestre or Tronchetto, take the vaporetto in. No cars in Venice.</div>
+          <div><button class="nearby-btn" data-city="venice" onclick="filterNearby(this)">Venice picks</button></div>
+        </div>
+        <div class="drive-expand-toggle" onclick="toggleDrive(this)">
+          <span class="chevron">&#8964;</span>
+          <span>Route detail</span>
+        </div>
+        <div class="drive-detail">
+          <div class="route-line">Bologna → Venice &nbsp;·&nbsp; ~2h 15m &nbsp;·&nbsp; A13 north</div>
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 8px;">Easy flat drive across the Po Valley. Park at Venezia Tronchetto (garage) or Mestre and take the train bridge across.</div>
+          <div class="stops">
+            <div class="stop-item"><span class="stop-dot"></span><span>Tronchetto Parking: €25–30/day, 5 min vaporetto to San Marco</span></div>
+            <div class="stop-item"><span class="stop-dot"></span><span>Arrive by noon to get the most of the afternoon light on the canals</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 7 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">07</div>
+            <div class="day-date-sm">Jul 7</div>
+          </div>
+          <div><span class="status-dot loose" title="Loose"></span></div>
+          <div>
+            <div class="col-val">Venice</div>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Venice (Mestre)</div>
+          </div>
+          <div class="col-muted">Full Venice day. Dorsoduro and Cannaregio over San Marco crowds. Evening Bellini.</div>
+          <div><button class="nearby-btn" data-city="venice" onclick="filterNearby(this)">Venice picks</button></div>
+        </div>
+      </div>
+
+      <!-- Day 8 — driving day -->
+      <div class="day-card driving">
+        <div class="day-main">
+          <div>
+            <div class="day-num">08</div>
+            <div class="day-date-sm">Jul 8</div>
+          </div>
+          <div><span class="status-dot tbd" title="TBD"></span></div>
+          <div>
+            <div class="col-val">Venice → Cortina</div>
+            <span class="drive-badge">&#9654; 2h 30m · SS51</span>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Cortina d'Ampezzo</div>
+          </div>
+          <div class="col-muted">Into the Dolomites. The drive itself is the event — SS51 through Cadore is spectacular.</div>
+          <div><button class="nearby-btn" data-city="dolomites" onclick="filterNearby(this)">Dolomites picks</button></div>
+        </div>
+        <div class="drive-expand-toggle" onclick="toggleDrive(this)">
+          <span class="chevron">&#8964;</span>
+          <span>Route detail</span>
+        </div>
+        <div class="drive-detail">
+          <div class="route-line">Venice (Mestre) → Cortina d'Ampezzo &nbsp;·&nbsp; ~2h 30m &nbsp;·&nbsp; A27 + SS51</div>
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 8px;">Take the A27 north from Mestre to Belluno, then the SS51 up through the Piave valley. The last hour on the SS51 is the best driving of the trip — narrow valley, river on one side, Dolomite walls appearing ahead.</div>
+          <div class="stops">
+            <div class="stop-item"><span class="stop-dot"></span><span>Stop in Belluno for espresso — pretty alpine town, worth 20 min</span></div>
+            <div class="stop-item"><span class="stop-dot"></span><span>Lago di Centro Cadore viewpoint ~30min before Cortina — don't skip it</span></div>
+            <div class="stop-item"><span class="stop-dot"></span><span>Fill up the tank in Belluno — Cortina fuel is expensive</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 9 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">09</div>
+            <div class="day-date-sm">Jul 9</div>
+          </div>
+          <div><span class="status-dot tbd" title="TBD"></span></div>
+          <div>
+            <div class="col-val">Cortina d'Ampezzo</div>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Cortina d'Ampezzo</div>
+          </div>
+          <div class="col-muted">Tre Cime di Lavaredo loop if weather holds. Best done early — crowds by 10am.</div>
+          <div><button class="nearby-btn" data-city="dolomites" onclick="filterNearby(this)">Dolomites picks</button></div>
+        </div>
+      </div>
+
+      <!-- Day 10 — driving day -->
+      <div class="day-card driving">
+        <div class="day-main">
+          <div>
+            <div class="day-num">10</div>
+            <div class="day-date-sm">Jul 10</div>
+          </div>
+          <div><span class="status-dot tbd" title="TBD"></span></div>
+          <div>
+            <div class="col-val">Cortina → Bolzano</div>
+            <span class="drive-badge">&#9654; 2h · SS48 / Passo Falzarego</span>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Bolzano / Alta Badia</div>
+          </div>
+          <div class="col-muted">The Dolomite high road. Passo Falzarego, Val Badia, Alta Badia. Stop as much as you want.</div>
+          <div><button class="nearby-btn" data-city="dolomites" onclick="filterNearby(this)">Dolomites picks</button></div>
+        </div>
+        <div class="drive-expand-toggle" onclick="toggleDrive(this)">
+          <span class="chevron">&#8964;</span>
+          <span>Route detail</span>
+        </div>
+        <div class="drive-detail">
+          <div class="route-line">Cortina → Bolzano &nbsp;·&nbsp; ~2h driving (budget 4–5h with stops) &nbsp;·&nbsp; SS48 Dolomite Road</div>
+          <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 8px;">This is the best drive of the trip. The SS48 is the Great Dolomites Road — takes you over Passo Falzarego (2,105m), through Val Badia and Alta Badia. Do not rush this. The views from the Falzarego pass are as good as it gets in the Alps.</div>
+          <div class="stops">
+            <div class="stop-item"><span class="stop-dot"></span><span>Passo Falzarego summit — pull over, walk 10 min toward the Lagazuoi cable car viewpoint</span></div>
+            <div class="stop-item"><span class="stop-dot"></span><span>Alta Badia (La Villa / Corvara) — lunch at a rifugio if timing works out</span></div>
+            <div class="stop-item"><span class="stop-dot"></span><span>Alpe di Siusi (Seiser Alm) detour adds ~45min but is the largest alpine meadow in Europe — worth it if you have energy</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 11 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">11</div>
+            <div class="day-date-sm">Jul 11</div>
+          </div>
+          <div><span class="status-dot tbd" title="TBD"></span></div>
+          <div>
+            <div class="col-val">Bolzano / South Tyrol</div>
+          </div>
+          <div>
+            <div class="col-val">TBD</div>
+            <div class="col-muted">Bolzano</div>
+          </div>
+          <div class="col-muted">South Tyrol has its own feel — Austrian in character, great wine (Pinot Grigio, Lagrein), easy pace.</div>
+          <div><button class="nearby-btn" data-city="dolomites" onclick="filterNearby(this)">Dolomites picks</button></div>
+        </div>
+      </div>
+
+      <!-- Day 12 -->
+      <div class="day-card">
+        <div class="day-main">
+          <div>
+            <div class="day-num">12</div>
+            <div class="day-date-sm">Jul 12</div>
+          </div>
+          <div><span class="status-dot tbd" title="TBD"></span></div>
+          <div>
+            <div class="col-val">→ Departure</div>
+          </div>
+          <div>
+            <div class="col-val">—</div>
+          </div>
+          <div class="col-muted">Drive to VCE or MXP depending on flight. Return car. Head home.</div>
+          <div></div>
+        </div>
+      </div>
+
+    </div><!-- /dayList -->
+  </section>
+
+  <!-- ── RECOMMENDATIONS ── -->
+  <section class="section">
+    <div class="section-label">Recommendations</div>
+
+    <div class="filter-bar">
+      <div class="filter-group" id="cityFilters">
+        <span class="filter-pill city-all active" onclick="setFilter('city','all',this)">All cities</span>
+        <span class="filter-pill city-rome" onclick="setFilter('city','rome',this)">Rome</span>
+        <span class="filter-pill city-bologna" onclick="setFilter('city','bologna',this)">Bologna</span>
+        <span class="filter-pill city-venice" onclick="setFilter('city','venice',this)">Venice</span>
+        <span class="filter-pill city-dolomites" onclick="setFilter('city','dolomites',this)">Dolomites</span>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="filter-group" id="typeFilters">
+        <span class="filter-pill type-all active" onclick="setFilter('type','all',this)">All types</span>
+        <span class="filter-pill type-restaurant" onclick="setFilter('type','restaurant',this)">Restaurant</span>
+        <span class="filter-pill type-bar" onclick="setFilter('type','bar',this)">Bar</span>
+        <span class="filter-pill type-coffee" onclick="setFilter('type','coffee',this)">Coffee</span>
+        <span class="filter-pill type-stop" onclick="setFilter('type','stop',this)">Stop / view</span>
+      </div>
+    </div>
+
+    <div class="rec-table-wrap">
+      <table class="rec-table" id="recTable">
+        <thead>
+          <tr>
+            <th class="col-star" onclick="sortTable('star')" title="Can't miss">&#9733; <span class="sort-arrow">↕</span></th>
+            <th class="col-type" onclick="sortTable('type')">Type <span class="sort-arrow">↕</span></th>
+            <th class="col-location" onclick="sortTable('city')">Location <span class="sort-arrow">↕</span></th>
+            <th class="col-name" onclick="sortTable('name')">Name <span class="sort-arrow">↕</span></th>
+            <th class="col-by" onclick="sortTable('by')">Rec'd by <span class="sort-arrow">↕</span></th>
+            <th class="col-notes">Notes</th>
+          </tr>
+        </thead>
+        <tbody id="recBody">
+        </tbody>
+      </table>
+      <div class="no-results" id="noResults" style="display:none;">No recommendations match these filters.</div>
+    </div>
+  </section>
+
+  <!-- ── NOTES ── -->
+  <section class="section">
+    <div class="section-label">Notes</div>
+    <textarea class="notes-area" id="tripNotes" placeholder="SM 06/12: Add notes here — use your initials and date so it's clear who wrote what.&#10;&#10;SM 06/12: Car rental pickup at FCO — confirm Hertz reservation, need international license.&#10;SM 06/12: Get international data plan before departure. T-Mobile or Google Fi."></textarea>
+    <p class="notes-hint">Type freely. To save permanently, copy your notes into the HTML file on GitHub.</p>
+  </section>
+
+</div><!-- /page -->
+
+<script>
+// ── DATA ──
+const recs = [
+  // Rome
+  { star: true,  type: 'restaurant', city: 'rome',      name: 'Da Enzo al 29',         by: 'SM',  notes: 'Testaccio classic — cacio e pepe, rigatoni alla pajata. No reservations, arrive early.' },
+  { star: true,  type: 'restaurant', city: 'rome',      name: 'Roscioli',               by: 'SM',  notes: 'Salumeria and restaurant in one. Best carbonara in Rome, serious wine list. Book ahead.' },
+  { star: false, type: 'bar',        city: 'rome',      name: 'Il Sorpasso',            by: 'SM',  notes: 'Prati neighborhood aperitivo bar. Natural wine, good cicchetti. Packed at 7pm.' },
+  { star: false, type: 'coffee',     city: 'rome',      name: 'Caffè San Eustachio',    by: 'SM',  notes: 'Legendary espresso near the Pantheon. Get it zuccherato (pre-sweetened) the Roman way.' },
+  { star: false, type: 'restaurant', city: 'rome',      name: 'Flavio al Velavevodetto',by: 'SM',  notes: 'Monte Testaccio terrace. Roman classics done right. Coda alla vaccinara.' },
+  { star: false, type: 'stop',       city: 'rome',      name: 'Trastevere evening walk',by: 'SM',  notes: 'Best at dusk. Start at Santa Maria in Trastevere, wander south toward Viale Trastevere.' },
+  // Bologna
+  { star: true,  type: 'restaurant', city: 'bologna',   name: 'Trattoria Anna Maria',   by: 'SM',  notes: 'The tortellini in brodo you came to Bologna for. Cash only, book well ahead.' },
+  { star: false, type: 'restaurant', city: 'bologna',   name: 'Osteria dell\'Orsa',      by: 'SM',  notes: 'No-frills, packed, and great. Tagliatelle al ragù. Lines out the door.' },
+  { star: false, type: 'coffee',     city: 'bologna',   name: 'Café de la Paix',        by: 'SM',  notes: 'Under the porticoes near Piazza Maggiore. Proper espresso, unhurried.' },
+  { star: false, type: 'stop',       city: 'bologna',   name: 'Mercato di Mezzo',       by: 'SM',  notes: 'The covered market in the old ghetto. Best for grazing — mortadella, cheese, tigelle.' },
+  // Venice
+  { star: true,  type: 'bar',        city: 'venice',    name: 'Harry\'s Bar',            by: 'SM',  notes: 'The original Bellini. Touristy and expensive — you still have to do it once.' },
+  { star: false, type: 'restaurant', city: 'venice',    name: 'Antiche Carampane',      by: 'SM',  notes: 'Best seafood in Venice. San Polo neighborhood, hidden, no menus in the window. Book ahead.' },
+  { star: false, type: 'bar',        city: 'venice',    name: 'All\'Arco',               by: 'SM',  notes: 'Tiny bacaro near Rialto. Cicchetti and ombra (small wine). Go at 11am or 6pm, not between.' },
+  { star: false, type: 'stop',       city: 'venice',    name: 'Dorsoduro sestiere',     by: 'SM',  notes: 'Better than San Marco for wandering. Zattere waterfront, Peggy Guggenheim, quieter canals.' },
+  { star: false, type: 'coffee',     city: 'venice',    name: 'Caffè dei Frari',        by: 'SM',  notes: 'Opposite the Frari church. Good espresso, nice square to sit at.' },
+  // Dolomites
+  { star: true,  type: 'stop',       city: 'dolomites', name: 'Tre Cime di Lavaredo',  by: 'SM',  notes: 'The Dolomites in one image. 3-peak loop hike, 10km, 2.5h. Go before 9am to beat the crowds.' },
+  { star: true,  type: 'stop',       city: 'dolomites', name: 'Passo Falzarego',        by: 'SM',  notes: 'Summit stop on the Great Dolomites Road. Walk 10 min toward the Lagazuoi cable car base.' },
+  { star: false, type: 'restaurant', city: 'dolomites', name: 'Rifugio Lagazuoi',       by: 'SM',  notes: 'At the top of the Lagazuoi cable car, 2,752m. Lunch with the best view of the trip.' },
+  { star: false, type: 'stop',       city: 'dolomites', name: 'Alpe di Siusi (Seiser Alm)', by: 'SM', notes: 'Largest alpine meadow in the Alps. Take the cable car from Siusi village. Surreal plateau.' },
+  { star: false, type: 'bar',        city: 'dolomites', name: 'Bolzano Walther Platz',  by: 'SM',  notes: 'The central square in Bolzano. Half Austrian, half Italian. Good for an evening Aperol.' },
+];
+
+// ── STATE ──
+let activeCity = 'all';
+let activeType = 'all';
+let sortCol = 'star';
+let sortDir = 1; // 1 = desc (stars first), -1 = asc
+
+// ── RENDER ──
+function renderTable() {
+  const body = document.getElementById('recBody');
+  const noResults = document.getElementById('noResults');
+
+  let filtered = recs.filter(r => {
+    const cityMatch = activeCity === 'all' || r.city === activeCity;
+    const typeMatch = activeType === 'all' || r.type === activeType;
+    return cityMatch && typeMatch;
+  });
+
+  filtered.sort((a, b) => {
+    let av, bv;
+    if (sortCol === 'star') { av = a.star ? 1 : 0; bv = b.star ? 1 : 0; }
+    else if (sortCol === 'type') { av = a.type; bv = b.type; }
+    else if (sortCol === 'city') { av = a.city; bv = b.city; }
+    else if (sortCol === 'name') { av = a.name.toLowerCase(); bv = b.name.toLowerCase(); }
+    else if (sortCol === 'by') { av = a.by.toLowerCase(); bv = b.by.toLowerCase(); }
+    else { av = 0; bv = 0; }
+
+    if (typeof av === 'number') return (bv - av) * sortDir;
+    return av < bv ? -sortDir : av > bv ? sortDir : 0;
+  });
+
+  if (filtered.length === 0) {
+    body.innerHTML = '';
+    noResults.style.display = 'block';
+    return;
+  }
+  noResults.style.display = 'none';
+
+  const cityLabels = { rome: 'Rome', bologna: 'Bologna', venice: 'Venice', dolomites: 'Dolomites' };
+  const typeLabels = { restaurant: 'Restaurant', bar: 'Bar', coffee: 'Coffee', stop: 'Stop / view' };
+
+  body.innerHTML = filtered.map(r => `
+    <tr>
+      <td class="col-star">
+        <button class="star-btn ${r.star ? 'starred' : ''}"
+          onclick="toggleStar('${r.name}')"
+          title="${r.star ? "Can't miss" : 'Mark as can\'t miss'}">&#9733;</button>
+      </td>
+      <td class="col-type"><span class="type-badge badge-${r.type}">${typeLabels[r.type]}</span></td>
+      <td class="col-location"><span class="city-tag">${cityLabels[r.city]}</span></td>
+      <td class="col-name"><span class="rec-name">${r.name}</span></td>
+      <td class="col-by"><span class="rec-by">${r.by}</span></td>
+      <td class="col-notes"><span class="rec-notes-cell">${r.notes}</span></td>
+    </tr>
+  `).join('');
+
+  // Update sort arrows
+  document.querySelectorAll('.rec-table th').forEach(th => th.classList.remove('sorted'));
+  const cols = ['star','type','city','name','by','notes'];
+  const idx = cols.indexOf(sortCol);
+  const ths = document.querySelectorAll('.rec-table th');
+  if (ths[idx]) ths[idx].classList.add('sorted');
+}
+
+function setFilter(dimension, val, el) {
+  if (dimension === 'city') {
+    activeCity = val;
+    document.querySelectorAll('#cityFilters .filter-pill').forEach(p => p.classList.remove('active'));
+  } else {
+    activeType = val;
+    document.querySelectorAll('#typeFilters .filter-pill').forEach(p => p.classList.remove('active'));
+  }
+  el.classList.add('active');
+  renderTable();
+}
+
+function sortTable(col) {
+  if (sortCol === col) { sortDir *= -1; }
+  else { sortCol = col; sortDir = col === 'star' ? 1 : 1; }
+  renderTable();
+}
+
+function toggleStar(name) {
+  const rec = recs.find(r => r.name === name);
+  if (rec) { rec.star = !rec.star; renderTable(); }
+}
+
+function filterNearby(btn) {
+  const city = btn.dataset.city;
+  // If already active and filtering that city, reset
+  if (activeCity === city) {
+    activeCity = 'all';
+    document.querySelectorAll('#cityFilters .filter-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector('.filter-pill.city-all').classList.add('active');
+    document.querySelectorAll('.nearby-btn').forEach(b => b.classList.remove('active'));
+  } else {
+    activeCity = city;
+    document.querySelectorAll('#cityFilters .filter-pill').forEach(p => p.classList.remove('active'));
+    const pill = document.querySelector(`.filter-pill.city-${city}`);
+    if (pill) pill.classList.add('active');
+    document.querySelectorAll('.nearby-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  renderTable();
+  document.querySelector('.section-label[data-section="recs"]') ||
+    document.querySelectorAll('.section-label')[1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function toggleDrive(toggle) {
+  toggle.classList.toggle('open');
+  const detail = toggle.nextElementSibling;
+  detail.classList.toggle('open');
+}
+
+// Fix section label for scroll target
+document.querySelectorAll('.section-label')[1].setAttribute('data-section','recs');
+
+// Init
+renderTable();
+</script>
+</body>
+</html>
