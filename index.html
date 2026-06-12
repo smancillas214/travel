@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italy Road Trip 2026</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f7f6f3;
+  --bg-tertiary: #f0efe9;
+  --text: #1a1a18;
+  --text-secondary: #5f5e5a;
+  --text-tertiary: #8a8a85;
+  --border: rgba(0,0,0,0.09);
+  --border-md: rgba(0,0,0,0.15);
+
+  --cortina-border: #5DCAA5; --cortina-bg: #E1F5EE; --cortina-text: #0F6E56; --cortina-num: #1D9E75;
+  --bolzano-border: #EF9F27; --bolzano-bg: #FAEEDA; --bolzano-text: #854F0B; --bolzano-num: #BA7517;
+  --verona-border:  #D85A30; --verona-bg:  #FAECE7; --verona-text:  #993C1D; --verona-num:  #D85A30;
+  --como-border:    #378ADD; --como-bg:    #E6F1FB; --como-text:    #185FA5; --como-num:    #378ADD;
+  --transit-border: #888780; --transit-bg: #F1EFE8; --transit-text: #444441; --transit-num: #888780;
+
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --edit-ring: rgba(55,138,221,0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1e1c; --bg-secondary: #272725; --bg-tertiary: #2e2e2b;
+    --text: #f0efe9; --text-secondary: #b4b2a9; --text-tertiary: #888780;
+    --border: rgba(255,255,255,0.08); --border-md: rgba(255,255,255,0.15);
+    --cortina-border: #5DCAA5; --cortina-bg: #085041; --cortina-text: #9FE1CB; --cortina-num: #5DCAA5;
+    --bolzano-border: #EF9F27; --bolzano-bg: #633806; --bolzano-text: #FAC775; --bolzano-num: #EF9F27;
+    --verona-border:  #D85A30; --verona-bg:  #4A1B0C; --verona-text:  #F5C4B3; --verona-num:  #D85A30;
+    --como-border:    #378ADD; --como-bg:    #042C53; --como-text:    #B5D4F4; --como-num:    #378ADD;
+    --transit-border: #5F5E5A; --transit-bg: #2C2C2A; --transit-text: #B4B2A9; --transit-num: #888780;
+  }
+}
+
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg-tertiary); color: var(--text); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+.page { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.toolbar-btn {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--border-md);
+  background: var(--bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.toolbar-btn:hover { background: var(--bg-secondary); color: var(--text); }
+.toolbar-btn.primary { background: var(--text); color: var(--bg); border-color: transparent; }
+.toolbar-btn.primary:hover { opacity: 0.85; }
+
+/* ── HEADER ── */
+.header { margin-bottom: 2.5rem; padding-bottom: 1.75rem; border-bottom: 0.5px solid var(--border-md); }
+.trip-title { font-size: 26px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.trip-meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 1rem; }
+.trip-vibe { font-size: 14px; color: var(--text-secondary); max-width: 700px; line-height: 1.75; }
+
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.25rem; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 3rem; }
+.section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 1rem; }
+
+/* ── EDITABLE ── */
+[contenteditable] {
+  outline: none;
+  border-radius: 4px;
+  transition: box-shadow 0.15s, background 0.15s;
+  cursor: text;
+}
+[contenteditable]:hover { box-shadow: inset 0 0 0 1px var(--border-md); }
+[contenteditable]:focus { box-shadow: 0 0 0 2px var(--edit-ring), inset 0 0 0 1px rgba(55,138,221,0.4); background: var(--bg); }
+[contenteditable]:empty:before { content: attr(data-placeholder); color: var(--text-tertiary); pointer-events: none; font-style: italic; }
+
+/* ── DAY CARDS ── */
+.day-list { display: flex; flex-direction: column; gap: 12px; }
+.day-card { background: var(--bg); border: 0.5px solid var(--border-md); border-radius: var(--radius-lg); border-left-width: 3px; overflow: hidden; }
+.day-card.loc-cortina { border-left-color: var(--cortina-border); }
+.day-card.loc-bolzano { border-left-color: var(--bolzano-border); }
+.day-card.loc-verona  { border-left-color: var(--verona-border); }
+.day-card.loc-como    { border-left-color: var(--como-border); }
+.day-card.loc-transit { border-left-color: var(--transit-border); }
+
+.day-header { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px 10px; flex-wrap: wrap; }
+.day-num-block { display: flex; flex-direction: column; align-items: flex-start; min-width: 36px; flex-shrink: 0; }
+.day-num { font-size: 22px; font-weight: 500; line-height: 1; }
+.loc-cortina .day-num { color: var(--cortina-num); }
+.loc-bolzano .day-num { color: var(--bolzano-num); }
+.loc-verona  .day-num { color: var(--verona-num); }
+.loc-como    .day-num { color: var(--como-num); }
+.loc-transit .day-num { color: var(--transit-num); }
+.day-date { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; white-space: nowrap; }
+
+.day-title-block { flex: 1; min-width: 160px; }
+.day-location { font-size: 15px; font-weight: 500; color: var(--text); min-width: 40px; display: block; }
+.day-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; display: block; }
+
+.drive-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.loc-cortina .drive-pill { background: var(--cortina-bg); color: var(--cortina-text); }
+.loc-bolzano .drive-pill { background: var(--bolzano-bg); color: var(--bolzano-text); }
+.loc-verona  .drive-pill { background: var(--verona-bg);  color: var(--verona-text); }
+.loc-como    .drive-pill { background: var(--como-bg);    color: var(--como-text); }
+.loc-transit .drive-pill { background: var(--transit-bg); color: var(--transit-text); }
+
+.header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* Status */
+.status-cycle { display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 3px 8px; border-radius: 20px; border: 0.5px solid var(--border-md); background: var(--bg-secondary); transition: background 0.15s; user-select: none; font-size: 11px; color: var(--text-tertiary); }
+.status-cycle:hover { background: var(--bg-tertiary); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.confirmed { background: #5DCAA5; }
+.status-dot.loose     { background: #EF9F27; }
+.status-dot.tbd       { background: #B4B2A9; }
+
+.nearby-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-tertiary); background: var(--bg-secondary); border: 0.5px solid var(--border-md); border-radius: 20px; padding: 3px 10px; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+.nearby-btn:hover { color: var(--text-secondary); background: var(--bg-tertiary); }
+.loc-cortina .nearby-btn.active { background: var(--cortina-bg); color: var(--cortina-text); border-color: transparent; }
+.loc-bolzano .nearby-btn.active { background: var(--bolzano-bg); color: var(--bolzano-text); border-color: transparent; }
+.loc-verona  .nearby-btn.active { background: var(--verona-bg);  color: var(--verona-text);  border-color: transparent; }
+.loc-como    .nearby-btn.active { background: var(--como-bg);    color: var(--como-text);    border-color: transparent; }
+
+/* Time blocks */
+.time-blocks { display: grid; grid-template-columns: 1fr 1fr 1fr; border-top: 0.5px solid var(--border); }
+.time-block { padding: 12px 16px 14px; border-right: 0.5px solid var(--border); }
+.time-block:last-child { border-right: none; }
+.time-label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+.loc-cortina .time-label { color: var(--cortina-text); }
+.loc-bolzano .time-label { color: var(--bolzano-text); }
+.loc-verona  .time-label { color: var(--verona-text); }
+.loc-como    .time-label { color: var(--como-text); }
+.loc-transit .time-label { color: var(--transit-text); }
+.time-content { font-size: 13px; color: var(--text-secondary); line-height: 1.65; min-height: 20px; padding: 2px 3px; }
+
+/* Drive expand */
+.drive-expand-toggle { display: flex; align-items: center; gap: 6px; padding: 8px 18px; border-top: 0.5px solid var(--border); cursor: pointer; font-size: 12px; color: var(--text-tertiary); user-select: none; background: var(--bg-secondary); transition: color 0.15s; }
+.drive-expand-toggle:hover { color: var(--text-secondary); }
+.chevron { transition: transform 0.2s; display: inline-block; }
+.drive-expand-toggle.open .chevron { transform: rotate(180deg); }
+.drive-detail { display: none; padding: 12px 18px 14px; border-top: 0.5px solid var(--border); background: var(--bg-secondary); }
+.drive-detail.open { display: block; }
+.route-headline { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; padding: 2px 3px; }
+.route-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; padding: 2px 3px; }
+.stop-list { display: flex; flex-direction: column; gap: 5px; }
+.stop-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.stop-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-tertiary); margin-top: 5px; flex-shrink: 0; }
+.stop-text { flex: 1; padding: 1px 2px; }
+
+/* ── RECS ── */
+.filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 0.875rem; }
+.filter-divider { width: 0.5px; height: 16px; background: var(--border-md); flex-shrink: 0; }
+.pill { font-size: 12px; padding: 4px 11px; border-radius: 20px; border: 0.5px solid var(--border-md); cursor: pointer; background: var(--bg); color: var(--text-secondary); transition: all 0.15s; user-select: none; font-family: inherit; }
+.pill:hover { background: var(--bg-secondary); }
+.pill.active.all        { background: var(--bg-tertiary); color: var(--text); }
+.pill.active.cortina    { background: var(--cortina-bg); color: var(--cortina-text); border-color: transparent; }
+.pill.active.bolzano    { background: var(--bolzano-bg); color: var(--bolzano-text); border-color: transparent; }
+.pill.active.verona     { background: var(--verona-bg);  color: var(--verona-text);  border-color: transparent; }
+.pill.active.como       { background: var(--como-bg);    color: var(--como-text);    border-color: transparent; }
+.pill.active.restaurant { background: #FAECE7; color: #993C1D; border-color: transparent; }
+.pill.active.bar        { background: #EEEDFE; color: #3C3489; border-color: transparent; }
+.pill.active.coffee     { background: #FAEEDA; color: #854F0B; border-color: transparent; }
+.pill.active.stop       { background: #EAF3DE; color: #3B6D11; border-color: transparent; }
+
+.rec-wrap { background: var(--bg); border: 0.5px solid var(--border-md); border-radius: var(--radius-lg); overflow: hidden; }
+.rec-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.rec-table th { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); padding: 10px 10px; text-align: left; border-bottom: 0.5px solid var(--border-md); background: var(--bg-secondary); cursor: pointer; user-select: none; white-space: nowrap; }
+.rec-table th:hover { color: var(--text-secondary); }
+.rec-table th.sorted { color: var(--text); }
+.sort-arr { margin-left: 3px; opacity: 0.4; font-size: 9px; }
+.rec-table th.sorted .sort-arr { opacity: 1; }
+.rec-table td { padding: 9px 10px; border-bottom: 0.5px solid var(--border); vertical-align: top; font-size: 13px; }
+.rec-table tr:last-child td { border-bottom: none; }
+.rec-table tr.data-row:hover td { background: var(--bg-secondary); }
+
+.col-star  { width: 36px; text-align: center; }
+.col-type  { width: 100px; }
+.col-loc   { width: 100px; }
+.col-name  { width: 160px; }
+.col-by    { width: 80px; }
+.col-notes { }
+.col-del   { width: 32px; text-align: center; }
+
+.star-btn { background: none; border: none; cursor: pointer; font-size: 16px; padding: 0; color: var(--text-tertiary); transition: color 0.15s, transform 0.15s; line-height: 1; }
+.star-btn:hover { transform: scale(1.2); }
+.star-btn.on { color: #EF9F27; }
+
+.type-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+.b-restaurant { background: #FAECE7; color: #993C1D; }
+.b-bar        { background: #EEEDFE; color: #3C3489; }
+.b-coffee     { background: #FAEEDA; color: #854F0B; }
+.b-stop       { background: #EAF3DE; color: #3B6D11; }
+
+.loc-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); cursor: pointer; }
+.loc-pip { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+.rec-name  { font-weight: 500; color: var(--text); }
+.rec-note  { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.rec-by    { font-size: 12px; color: var(--text-tertiary); }
+
+.del-btn { background: none; border: none; cursor: pointer; color: var(--text-tertiary); font-size: 14px; padding: 0; line-height: 1; transition: color 0.15s; opacity: 0; font-family: inherit; }
+.data-row:hover .del-btn { opacity: 1; }
+.del-btn:hover { color: #D85A30; }
+
+.add-rec-row td { padding: 8px 10px; }
+.add-rec-btn { font-size: 12px; color: var(--text-tertiary); background: none; border: none; cursor: pointer; padding: 4px 0; font-family: inherit; transition: color 0.15s; }
+.add-rec-btn:hover { color: var(--text-secondary); }
+
+.no-results { padding: 2rem; text-align: center; color: var(--text-tertiary); font-size: 13px; }
+
+/* inline selects */
+.inline-select { font-size: 12px; font-family: inherit; background: var(--bg-secondary); border: 0.5px solid var(--border-md); border-radius: var(--radius-md); padding: 3px 6px; color: var(--text); cursor: pointer; outline: none; }
+.inline-select:focus { box-shadow: 0 0 0 2px var(--edit-ring); }
+
+/* ── NOTES ── */
+.notes-area { width: 100%; min-height: 140px; background: var(--bg); border: 0.5px solid var(--border-md); border-radius: var(--radius-lg); padding: 14px 16px; font-size: 13px; font-family: inherit; color: var(--text); resize: vertical; line-height: 1.7; outline: none; transition: box-shadow 0.15s; }
+.notes-area:focus { box-shadow: 0 0 0 2px var(--edit-ring); }
+.notes-hint { font-size: 11px; color: var(--text-tertiary); margin-top: 6px; }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: var(--bg); font-size: 12px; padding: 8px 16px; border-radius: var(--radius-md); opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 100; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="toolbar">
+  <button class="toolbar-btn" onclick="resetAll()">Reset to defaults</button>
+  <button class="toolbar-btn primary" onclick="exportHTML()">Export HTML</button>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <h1 class="trip-title" id="tripTitle" contenteditable="true" data-placeholder="Trip title" data-key="tripTitle">Italy Road Trip</h1>
+  <p class="trip-meta" id="tripMeta" contenteditable="true" data-placeholder="Dates and route" data-key="tripMeta">July 24–29, 2026 &nbsp;·&nbsp; Venice → Cortina → Bolzano → Verona → Lake Como → Nice</p>
+  <p class="trip-vibe" id="tripVibe" contenteditable="true" data-placeholder="Trip description..." data-key="tripVibe">Five days bridging the Venice arrival and the South of France. The route runs northeast into the Dolomites first, then sweeps southwest through South Tyrol, Verona, and Lake Como before a scenic train ride to Nice. Max three hours of driving per day — the point is the road, not the destination.</p>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cortina-border)"></div>Cortina / Dolomites</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--bolzano-border)"></div>Bolzano / South Tyrol</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--verona-border)"></div>Verona</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--como-border)"></div>Lake Como</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--transit-border)"></div>Transit</div>
+  </div>
+</header>
+
+<!-- DAY BY DAY -->
+<section class="section">
+  <div class="section-label">Day by day</div>
+  <div class="day-list" id="dayList">
+
+    <!-- DAY 1 -->
+    <div class="day-card loc-cortina" data-day="0">
+      <div class="day-header">
+        <div class="day-num-block">
+          <div class="day-num">01</div>
+          <div class="day-date" contenteditable="true" data-key="day0-date">Fri Jul 24</div>
+        </div>
+        <div class="day-title-block">
+          <span class="day-location" contenteditable="true" data-key="day0-location">Venice → Cortina d'Ampezzo</span>
+          <span class="day-subtitle" contenteditable="true" data-key="day0-subtitle" data-placeholder="Subtitle...">Arrive VCE 2pm · Pick up rental · Drive into the Dolomites</span>
+        </div>
+        <div class="header-right">
+          <span class="drive-pill" contenteditable="true" data-key="day0-drive">&#9654; ~2h · A27 + SS51</span>
+          <div class="status-cycle" onclick="cycleStatus(this, 0)" data-status="loose">
+            <div class="status-dot loose"></div><span class="status-label">loose</span>
+          </div>
+          <button class="nearby-btn" data-city="cortina" onclick="filterNearby(this)">Cortina picks</button>
+        </div>
+      </div>
+      <div class="time-blocks">
+        <div class="time-block">
+          <div class="time-label">○ Morning</div>
+          <div class="time-content" contenteditable="true" data-key="day0-morning" data-placeholder="Morning plans...">Travel day from Dallas. In-flight or layover — nothing to plan.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">◑ Afternoon</div>
+          <div class="time-content" contenteditable="true" data-key="day0-afternoon" data-placeholder="Afternoon plans...">Land VCE ~2pm. Pick up rental car at Marco Polo Airport. Drive directly to Cortina — A27 north to Belluno, then SS51 up through the Piave Valley. Last hour on the SS51 is spectacular.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">● Evening</div>
+          <div class="time-content" contenteditable="true" data-key="day0-evening" data-placeholder="Evening plans...">Arrive Cortina ~5pm. Check in, walk the Corso Italia, aperitivo, dinner. Easy first night.</div>
+        </div>
+      </div>
+      <div class="drive-expand-toggle" onclick="toggleDrive(this)"><span class="chevron">&#8964;</span> Route detail</div>
+      <div class="drive-detail">
+        <div class="route-headline" contenteditable="true" data-key="day0-route-headline">Marco Polo Airport → Cortina d'Ampezzo · ~2h · A27 north + SS51</div>
+        <div class="route-desc" contenteditable="true" data-key="day0-route-desc" data-placeholder="Route description...">Exit the airport toward Mestre, pick up the A27 motorway north. Motorway runs to Belluno (~1h 15m), then SS51 up the Piave Valley into Cortina. The final 40 minutes on the SS51 is where the Dolomites walls first appear.</div>
+        <div class="stop-list" id="stops-0">
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true" data-placeholder="Add a stop note...">Fill the tank at the airport or in Mestre — fuel prices climb in the mountains</span></div>
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true" data-placeholder="Add a stop note...">Lago di Centro Cadore viewpoint ~20min before Cortina — quick pull-off, worth it</span></div>
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true" data-placeholder="Add a stop note...">Cortina parking: most hotels have garages — confirm at check-in</span></div>
+        </div>
+        <button class="add-rec-btn" style="margin-top:8px;" onclick="addStop(0)">+ Add stop</button>
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-card loc-cortina" data-day="1">
+      <div class="day-header">
+        <div class="day-num-block">
+          <div class="day-num">02</div>
+          <div class="day-date" contenteditable="true" data-key="day1-date">Sat Jul 25</div>
+        </div>
+        <div class="day-title-block">
+          <span class="day-location" contenteditable="true" data-key="day1-location">Cortina d'Ampezzo</span>
+          <span class="day-subtitle" contenteditable="true" data-key="day1-subtitle" data-placeholder="Subtitle...">Full day in the Dolomites — scenic drives, optional hiking</span>
+        </div>
+        <div class="header-right">
+          <div class="status-cycle" onclick="cycleStatus(this, 1)" data-status="tbd">
+            <div class="status-dot tbd"></div><span class="status-label">tbd</span>
+          </div>
+          <button class="nearby-btn" data-city="cortina" onclick="filterNearby(this)">Cortina picks</button>
+        </div>
+      </div>
+      <div class="time-blocks">
+        <div class="time-block">
+          <div class="time-label">○ Morning</div>
+          <div class="time-content" contenteditable="true" data-key="day1-morning" data-placeholder="Morning plans...">Tre Cime di Lavaredo — drive up early, crowds hit by 10am. The 10km loop hike is 2.5h. Even just driving to the refuge and walking the first viewpoint is worth it.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">◑ Afternoon</div>
+          <div class="time-content" contenteditable="true" data-key="day1-afternoon" data-placeholder="Afternoon plans...">Return to Cortina. Slow afternoon — coffee, walk the Corso Italia, browse the town.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">● Evening</div>
+          <div class="time-content" contenteditable="true" data-key="day1-evening" data-placeholder="Evening plans...">Negroni at a bar on the Corso, dinner at a proper restaurant — Veneto country so good wine and risotto.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="day-card loc-bolzano" data-day="2">
+      <div class="day-header">
+        <div class="day-num-block">
+          <div class="day-num">03</div>
+          <div class="day-date" contenteditable="true" data-key="day2-date">Sun Jul 26</div>
+        </div>
+        <div class="day-title-block">
+          <span class="day-location" contenteditable="true" data-key="day2-location">Cortina → Bolzano</span>
+          <span class="day-subtitle" contenteditable="true" data-key="day2-subtitle" data-placeholder="Subtitle...">The Passo Falzarego drive — best road of the trip</span>
+        </div>
+        <div class="header-right">
+          <span class="drive-pill" contenteditable="true" data-key="day2-drive">&#9654; ~1.5h · SS48 Dolomite Road</span>
+          <div class="status-cycle" onclick="cycleStatus(this, 2)" data-status="tbd">
+            <div class="status-dot tbd"></div><span class="status-label">tbd</span>
+          </div>
+          <button class="nearby-btn" data-city="bolzano" onclick="filterNearby(this)">Bolzano picks</button>
+        </div>
+      </div>
+      <div class="time-blocks">
+        <div class="time-block">
+          <div class="time-label">○ Morning</div>
+          <div class="time-content" contenteditable="true" data-key="day2-morning" data-placeholder="Morning plans...">Drive: Cortina → Bolzano. Leave mid-morning. The SS48 over Passo Falzarego (2,105m) is the best driving of the trip. Budget 3–4 hours including stops.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">◑ Afternoon</div>
+          <div class="time-content" contenteditable="true" data-key="day2-afternoon" data-placeholder="Afternoon plans...">Arrive Bolzano. Walk the old town — Piazza Walther, the Gothic cathedral, the covered market. Optional: Ötzi the Iceman at the South Tyrol Museum of Archaeology.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">● Evening</div>
+          <div class="time-content" contenteditable="true" data-key="day2-evening" data-placeholder="Evening plans...">Best wine bar scene of the trip. Bolzano is Gewürztraminer and Lagrein country. Find a Weinstube and work through a bottle. Dinner should be a proper sit-down.</div>
+        </div>
+      </div>
+      <div class="drive-expand-toggle" onclick="toggleDrive(this)"><span class="chevron">&#8964;</span> Route detail</div>
+      <div class="drive-detail">
+        <div class="route-headline" contenteditable="true" data-key="day2-route-headline">Cortina → Bolzano · ~1.5h driving (budget 3–4h with stops) · SS48 Great Dolomites Road</div>
+        <div class="route-desc" contenteditable="true" data-key="day2-route-desc" data-placeholder="Route description...">Head west out of Cortina on the SS48. The road climbs immediately to Passo Falzarego — summit at 2,105m with panoramic views. From there drops into Val Badia and Alta Badia through Corvara, then down to Bolzano. Do not rush this road.</div>
+        <div class="stop-list" id="stops-2">
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Passo Falzarego summit — pull over, walk 10 minutes toward the Lagazuoi cable car base for the best view</span></div>
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Alta Badia (La Villa / Corvara) — coffee or lunch at a rifugio if timing works</span></div>
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Alpe di Siusi detour: adds ~45min but largest alpine meadow in Europe — worth it if energy allows</span></div>
+        </div>
+        <button class="add-rec-btn" style="margin-top:8px;" onclick="addStop(2)">+ Add stop</button>
+      </div>
+    </div>
+
+    <!-- DAY 4 -->
+    <div class="day-card loc-verona" data-day="3">
+      <div class="day-header">
+        <div class="day-num-block">
+          <div class="day-num">04</div>
+          <div class="day-date" contenteditable="true" data-key="day3-date">Mon Jul 27</div>
+        </div>
+        <div class="day-title-block">
+          <span class="day-location" contenteditable="true" data-key="day3-location">Bolzano → Verona</span>
+          <span class="day-subtitle" contenteditable="true" data-key="day3-subtitle" data-placeholder="Subtitle...">Down from the mountains — Roman city, Valpolicella country</span>
+        </div>
+        <div class="header-right">
+          <span class="drive-pill" contenteditable="true" data-key="day3-drive">&#9654; ~2h · A22 south</span>
+          <div class="status-cycle" onclick="cycleStatus(this, 3)" data-status="tbd">
+            <div class="status-dot tbd"></div><span class="status-label">tbd</span>
+          </div>
+          <button class="nearby-btn" data-city="verona" onclick="filterNearby(this)">Verona picks</button>
+        </div>
+      </div>
+      <div class="time-blocks">
+        <div class="time-block">
+          <div class="time-label">○ Morning</div>
+          <div class="time-content" contenteditable="true" data-key="day3-morning" data-placeholder="Morning plans...">Drive: Bolzano → Verona. A22 motorway south through the Adige Valley — efficient and scenic enough. ~2 hours, arrive in time for lunch.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">◑ Afternoon</div>
+          <div class="time-content" contenteditable="true" data-key="day3-afternoon" data-placeholder="Afternoon plans...">Roman Arena (from outside is enough), Piazza delle Erbe, walk to Castelvecchio on the river. Verona is a decompression day — easy, walkable, handsome city.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">● Evening</div>
+          <div class="time-content" contenteditable="true" data-key="day3-evening" data-placeholder="Evening plans...">Verona sits in Amarone and Valpolicella wine country. A good restaurant here means serious wine. Worth booking ahead.</div>
+        </div>
+      </div>
+      <div class="drive-expand-toggle" onclick="toggleDrive(this)"><span class="chevron">&#8964;</span> Route detail</div>
+      <div class="drive-detail">
+        <div class="route-headline" contenteditable="true" data-key="day3-route-headline">Bolzano → Verona · ~2h · A22 Autostrada del Brennero</div>
+        <div class="route-desc" contenteditable="true" data-key="day3-route-desc" data-placeholder="Route description...">Straightforward motorway south through the Adige Valley. The valley itself is scenic — carved between steep hillsides. No need for alternative routing.</div>
+        <div class="stop-list" id="stops-3">
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Trento is worthwhile if leaving early — 45min from Bolzano, handsome old town, 20min off motorway</span></div>
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Verona parking: Parcheggio Cittadella near the Arena is well-situated</span></div>
+        </div>
+        <button class="add-rec-btn" style="margin-top:8px;" onclick="addStop(3)">+ Add stop</button>
+      </div>
+    </div>
+
+    <!-- DAY 5 -->
+    <div class="day-card loc-como" data-day="4">
+      <div class="day-header">
+        <div class="day-num-block">
+          <div class="day-num">05</div>
+          <div class="day-date" contenteditable="true" data-key="day4-date">Tue Jul 28</div>
+        </div>
+        <div class="day-title-block">
+          <span class="day-location" contenteditable="true" data-key="day4-location">Verona → Varenna (Lake Como)</span>
+          <span class="day-subtitle" contenteditable="true" data-key="day4-subtitle" data-placeholder="Subtitle...">Eastern shore — quieter, more authentic, Bellagio by ferry</span>
+        </div>
+        <div class="header-right">
+          <span class="drive-pill" contenteditable="true" data-key="day4-drive">&#9654; ~2–2.5h · A4 + SP72</span>
+          <div class="status-cycle" onclick="cycleStatus(this, 4)" data-status="tbd">
+            <div class="status-dot tbd"></div><span class="status-label">tbd</span>
+          </div>
+          <button class="nearby-btn" data-city="como" onclick="filterNearby(this)">Como picks</button>
+        </div>
+      </div>
+      <div class="time-blocks">
+        <div class="time-block">
+          <div class="time-label">○ Morning</div>
+          <div class="time-content" contenteditable="true" data-key="day4-morning" data-placeholder="Morning plans...">Drive: Verona → Varenna. A4 west toward Milan, then north on the SP72 along the eastern shore of Como. ~2 to 2.5 hours. Arrive before noon.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">◑ Afternoon</div>
+          <div class="time-content" contenteditable="true" data-key="day4-afternoon" data-placeholder="Afternoon plans...">Walk the Passeggiata degli Innamorati. If you want Bellagio, the ferry is ~15 minutes — manageable for a couple of hours, then back.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">● Evening</div>
+          <div class="time-content" contenteditable="true" data-key="day4-evening" data-placeholder="Evening plans...">Lakefront dinner in Varenna — the end of the Italy leg, make it a good one. Book ahead, the good spots fill up in peak season.</div>
+        </div>
+      </div>
+      <div class="drive-expand-toggle" onclick="toggleDrive(this)"><span class="chevron">&#8964;</span> Route detail</div>
+      <div class="drive-detail">
+        <div class="route-headline" contenteditable="true" data-key="day4-route-headline">Verona → Varenna · ~2–2.5h · A4 west + A36 + SP72 north</div>
+        <div class="route-desc" contenteditable="true" data-key="day4-route-desc" data-placeholder="Route description...">Take A4 west toward Milan, branch north toward Lecco and follow SP72 up the eastern shore of Lake Como to Varenna. The lakeside road section is slow but scenic.</div>
+        <div class="stop-list" id="stops-4">
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Car parking in Varenna is limited — book hotel with parking or use the village lot near the ferry dock</span></div>
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Bellagio ferry from Varenna: ~15min, runs frequently, €5–6 per person</span></div>
+          <div class="stop-item"><span class="stop-dot"></span><span class="stop-text" contenteditable="true">Next morning: drop car near Como or Lecco, train to Milan, then Milan → Nice coastal route</span></div>
+        </div>
+        <button class="add-rec-btn" style="margin-top:8px;" onclick="addStop(4)">+ Add stop</button>
+      </div>
+    </div>
+
+    <!-- DAY 6 -->
+    <div class="day-card loc-transit" data-day="5">
+      <div class="day-header">
+        <div class="day-num-block">
+          <div class="day-num">06</div>
+          <div class="day-date" contenteditable="true" data-key="day5-date">Wed Jul 29</div>
+        </div>
+        <div class="day-title-block">
+          <span class="day-location" contenteditable="true" data-key="day5-location">Varenna → Milan → Nice</span>
+          <span class="day-subtitle" contenteditable="true" data-key="day5-subtitle" data-placeholder="Subtitle...">Transit day — drop car, train to Nice along the coast</span>
+        </div>
+        <div class="header-right">
+          <span class="drive-pill" contenteditable="true" data-key="day5-drive">&#9654; Train · Milan → Nice</span>
+          <div class="status-cycle" onclick="cycleStatus(this, 5)" data-status="tbd">
+            <div class="status-dot tbd"></div><span class="status-label">tbd</span>
+          </div>
+        </div>
+      </div>
+      <div class="time-blocks">
+        <div class="time-block">
+          <div class="time-label">○ Morning</div>
+          <div class="time-content" contenteditable="true" data-key="day5-morning" data-placeholder="Morning plans...">Drop the rental near Como or Lecco station. Train to Milano Centrale (~1h). Book Milan → Nice tickets in advance on Trenitalia or SNCF.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">◑ Afternoon</div>
+          <div class="time-content" contenteditable="true" data-key="day5-afternoon" data-placeholder="Afternoon plans...">Train: Milan → Nice. ~4.5h along the Italian Riviera coast through Genova, Savona, Ventimiglia. Sit on the right side of the train heading west for coastal views.</div>
+        </div>
+        <div class="time-block">
+          <div class="time-label">● Evening</div>
+          <div class="time-content" contenteditable="true" data-key="day5-evening" data-placeholder="Evening plans...">Arrive Nice. Join the group. The France leg begins.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /day-list -->
+</section>
+
+<!-- RECOMMENDATIONS -->
+<section class="section">
+  <div class="section-label">Recommendations</div>
+  <div class="filter-row">
+    <div id="cityPills" style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="pill all active" onclick="setFilter('city','all',this)">All cities</button>
+      <button class="pill cortina" onclick="setFilter('city','cortina',this)">Cortina</button>
+      <button class="pill bolzano" onclick="setFilter('city','bolzano',this)">Bolzano</button>
+      <button class="pill verona"  onclick="setFilter('city','verona',this)">Verona</button>
+      <button class="pill como"    onclick="setFilter('city','como',this)">Lake Como</button>
+    </div>
+    <div class="filter-divider"></div>
+    <div id="typePills" style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="pill all active" onclick="setFilter('type','all',this)">All types</button>
+      <button class="pill restaurant" onclick="setFilter('type','restaurant',this)">Restaurant</button>
+      <button class="pill bar"        onclick="setFilter('type','bar',this)">Bar</button>
+      <button class="pill coffee"     onclick="setFilter('type','coffee',this)">Coffee</button>
+      <button class="pill stop"       onclick="setFilter('type','stop',this)">Stop / view</button>
+    </div>
+  </div>
+  <div class="rec-wrap">
+    <table class="rec-table">
+      <thead>
+        <tr>
+          <th class="col-star" onclick="sortBy('star')">&#9733;<span class="sort-arr">↕</span></th>
+          <th class="col-type" onclick="sortBy('type')">Type<span class="sort-arr">↕</span></th>
+          <th class="col-loc"  onclick="sortBy('city')">Location<span class="sort-arr">↕</span></th>
+          <th class="col-name" onclick="sortBy('name')">Name<span class="sort-arr">↕</span></th>
+          <th class="col-by"   onclick="sortBy('by')">Rec'd by<span class="sort-arr">↕</span></th>
+          <th class="col-notes">Notes</th>
+          <th class="col-del"></th>
+        </tr>
+      </thead>
+      <tbody id="recBody"></tbody>
+    </table>
+    <div class="no-results" id="noResults" style="display:none;">No recommendations match these filters.</div>
+  </div>
+  <button class="add-rec-btn" style="margin-top:10px;display:block;" onclick="addRec()">+ Add recommendation</button>
+</section>
+
+<!-- NOTES -->
+<section class="section">
+  <div class="section-label">Notes</div>
+  <textarea class="notes-area" id="tripNotes" placeholder="SM 06/12: Use initials + date so it's clear who wrote what.&#10;&#10;SM 06/12: Book Milan → Nice train ASAP — Trenitalia or SNCF, scenic coastal route, sit right side heading west.&#10;SM 06/12: Confirm rental car drop-off location near Como/Lecco vs. Milan."></textarea>
+  <p class="notes-hint">Edits save automatically. To sync with your friend, copy the exported HTML to GitHub.</p>
+</section>
+
+</div><!-- /page -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONSTANTS ──
+const LOC_COLORS  = { cortina:'#5DCAA5', bolzano:'#EF9F27', verona:'#D85A30', como:'#378ADD' };
+const LOC_LABELS  = { cortina:'Cortina', bolzano:'Bolzano', verona:'Verona', como:'Lake Como' };
+const TYPE_LABELS = { restaurant:'Restaurant', bar:'Bar', coffee:'Coffee', stop:'Stop / view' };
+const STATUSES    = ['confirmed','loose','tbd'];
+const STATUS_LABELS = { confirmed:'confirmed', loose:'loose', tbd:'tbd' };
+
+// ── DEFAULT RECS ──
+const DEFAULT_RECS = [
+  { id:'r1',  star:true,  type:'stop',       city:'cortina', name:'Tre Cime di Lavaredo',       by:'SM', notes:'Drive to the Auronzo refuge (toll road), walk the 10km loop — 2.5h. Go before 9am. Most iconic Dolomite view.' },
+  { id:'r2',  star:true,  type:'stop',       city:'cortina', name:'Passo Falzarego',             by:'SM', notes:'On the Day 3 drive to Bolzano. Summit at 2,105m. Walk toward the Lagazuoi cable car base for best panorama.' },
+  { id:'r3',  star:false, type:'restaurant', city:'cortina', name:'Rifugio Lagazuoi',            by:'SM', notes:'At top of Lagazuoi cable car, 2,752m. Lunch with the best view of the trip.' },
+  { id:'r4',  star:false, type:'bar',        city:'cortina', name:'Bar Sport',                   by:'SM', notes:'Classic Cortina bar on the Corso Italia. Aperitivo scene, good Negroni.' },
+  { id:'r5',  star:false, type:'restaurant', city:'cortina', name:'Ristorante El Camineto',      by:'SM', notes:'Solid mountain cooking — canederli, speck, local venison. Book in high season.' },
+  { id:'r6',  star:false, type:'stop',       city:'cortina', name:'Lago di Misurina',            by:'SM', notes:'14km from Cortina. Perfectly still lake reflecting the peaks. Short walk around the shore.' },
+  { id:'r7',  star:true,  type:'bar',        city:'bolzano', name:'Laurin Bar (Hotel Laurin)',   by:'SM', notes:'Art Nouveau garden bar. Drinks under the wisteria. The right place for the Bolzano wine evening.' },
+  { id:'r8',  star:true,  type:'restaurant', city:'bolzano', name:'Zur Kaiserkron',              by:'SM', notes:'Half Tyrolean, half Italian. Excellent Lagrein wine list. Book ahead.' },
+  { id:'r9',  star:false, type:'stop',       city:'bolzano', name:'Ötzi — South Tyrol Museum',  by:'SM', notes:'5,300-year-old iceman. Genuinely compelling exhibit. 1 hour well spent.' },
+  { id:'r10', star:false, type:'coffee',     city:'bolzano', name:'Caffè Torggler',              by:'SM', notes:'Historic café on Piazza Walther. Good for a morning espresso.' },
+  { id:'r11', star:false, type:'stop',       city:'bolzano', name:'Alpe di Siusi',               by:'SM', notes:'Largest alpine meadow in Europe. Cable car from Siusi village. Otherworldly plateau.' },
+  { id:'r12', star:false, type:'restaurant', city:'verona',  name:'Osteria del Bugiardo',        by:'SM', notes:'Wine bar and restaurant. Focus on Valpolicella and Soave. Good cicchetti at the bar.' },
+  { id:'r13', star:true,  type:'restaurant', city:'verona',  name:'Il Desco',                    by:'SM', notes:"One of Verona's best tables. Regional ingredients, serious wine program. Book well in advance." },
+  { id:'r14', star:false, type:'bar',        city:'verona',  name:'Caffè Filippini',              by:'SM', notes:'Historic café on Piazza delle Erbe. Outdoor tables on the best square in the city.' },
+  { id:'r15', star:false, type:'stop',       city:'verona',  name:'Piazza delle Erbe',           by:'SM', notes:'Roman forum turned market square. The physical center of Verona.' },
+  { id:'r16', star:true,  type:'restaurant', city:'como',    name:'Ristorante Il Cavatappi',     by:'SM', notes:'Varenna. Small, serious wine list, lakeside setting. Book it — the Italy farewell dinner.' },
+  { id:'r17', star:false, type:'stop',       city:'como',    name:'Passeggiata degli Innamorati', by:'SM', notes:"Varenna's lakefront promenade. Late afternoon light on the lake against the mountains." },
+  { id:'r18', star:false, type:'stop',       city:'como',    name:'Bellagio (ferry from Varenna)', by:'SM', notes:'~15min ferry. Prettier than expected despite crowds. A few hours is the right amount.' },
+  { id:'r19', star:false, type:'bar',        city:'como',    name:'Bar Il Molo',                 by:'SM', notes:'Varenna ferry dock. Aperitivo with your feet on the lake. Unbeatable at golden hour.' },
+];
+
+// ── STATE ──
+let recs = [];
+let activeCity = 'all';
+let activeType = 'all';
+let sortCol = 'star';
+let sortDir = 1;
+
+// ── LOCALSTORAGE ──
+const LS = 'italytrip2026';
+
+function save() {
+  const data = {};
+  // contenteditable fields
+  document.querySelectorAll('[data-key]').forEach(el => {
+    data[el.dataset.key] = el.innerHTML;
+  });
+  // status dots
+  document.querySelectorAll('.status-cycle').forEach((el, i) => {
+    data['day' + i + '-status'] = el.dataset.status;
+  });
+  // recs
+  data['recs'] = JSON.stringify(recs);
+  // notes
+  data['notes'] = document.getElementById('tripNotes').value;
+  localStorage.setItem(LS, JSON.stringify(data));
+}
+
+function load() {
+  const raw = localStorage.getItem(LS);
+  if (!raw) { recs = JSON.parse(JSON.stringify(DEFAULT_RECS)); return; }
+  const data = JSON.parse(raw);
+  // contenteditable
+  document.querySelectorAll('[data-key]').forEach(el => {
+    if (data[el.dataset.key] !== undefined) el.innerHTML = data[el.dataset.key];
+  });
+  // statuses
+  document.querySelectorAll('.status-cycle').forEach((el, i) => {
+    const s = data['day' + i + '-status'];
+    if (s) applyStatus(el, s);
+  });
+  // recs
+  recs = data['recs'] ? JSON.parse(data['recs']) : JSON.parse(JSON.stringify(DEFAULT_RECS));
+  // notes
+  if (data['notes'] !== undefined) document.getElementById('tripNotes').value = data['notes'];
+}
+
+// ── AUTO-SAVE ──
+let saveTimer;
+function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(save, 600); }
+
+document.addEventListener('input', scheduleSave);
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('tripNotes').addEventListener('input', scheduleSave);
+});
+
+// ── STATUS ──
+function applyStatus(el, status) {
+  el.dataset.status = status;
+  const dot = el.querySelector('.status-dot');
+  const label = el.querySelector('.status-label');
+  dot.className = 'status-dot ' + status;
+  label.textContent = STATUS_LABELS[status];
+}
+
+function cycleStatus(el, dayIdx) {
+  const current = el.dataset.status;
+  const next = STATUSES[(STATUSES.indexOf(current) + 1) % STATUSES.length];
+  applyStatus(el, next);
+  scheduleSave();
+}
+
+// ── DRIVE EXPAND ──
+function toggleDrive(toggle) {
+  toggle.classList.toggle('open');
+  toggle.nextElementSibling.classList.toggle('open');
+}
+
+// ── ADD STOP ──
+function addStop(dayIdx) {
+  const list = document.getElementById('stops-' + dayIdx);
+  if (!list) return;
+  const item = document.createElement('div');
+  item.className = 'stop-item';
+  item.innerHTML = '<span class="stop-dot"></span><span class="stop-text" contenteditable="true" data-placeholder="Add a stop note..."></span>';
+  list.appendChild(item);
+  item.querySelector('.stop-text').focus();
+  scheduleSave();
+}
+
+// ── RECS ──
+function uid() { return 'r' + Date.now() + Math.random().toString(36).slice(2,6); }
+
+function render() {
+  const body = document.getElementById('recBody');
+  const none = document.getElementById('noResults');
+
+  let rows = recs.filter(r =>
+    (activeCity === 'all' || r.city === activeCity) &&
+    (activeType === 'all' || r.type === activeType)
+  );
+
+  rows.sort((a, b) => {
+    if (sortCol === 'star') return ((b.star ? 1 : 0) - (a.star ? 1 : 0)) * sortDir;
+    const av = (a[sortCol === 'city' ? 'city' : sortCol === 'type' ? 'type' : sortCol === 'name' ? 'name' : sortCol === 'by' ? 'by' : 'name'] || '').toLowerCase();
+    const bv = (b[sortCol === 'city' ? 'city' : sortCol === 'type' ? 'type' : sortCol === 'name' ? 'name' : sortCol === 'by' ? 'by' : 'name'] || '').toLowerCase();
+    return av < bv ? -sortDir : av > bv ? sortDir : 0;
+  });
+
+  if (!rows.length) {
+    body.innerHTML = '';
+    none.style.display = 'block';
+    return;
+  }
+  none.style.display = 'none';
+
+  body.innerHTML = rows.map(r => `
+    <tr class="data-row" data-id="${r.id}">
+      <td class="col-star"><button class="star-btn ${r.star ? 'on' : ''}" onclick="toggleStar('${r.id}')">&#9733;</button></td>
+      <td class="col-type">
+        <select class="inline-select" onchange="updateRec('${r.id}','type',this.value)">
+          <option value="restaurant" ${r.type==='restaurant'?'selected':''}>Restaurant</option>
+          <option value="bar"        ${r.type==='bar'?'selected':''}>Bar</option>
+          <option value="coffee"     ${r.type==='coffee'?'selected':''}>Coffee</option>
+          <option value="stop"       ${r.type==='stop'?'selected':''}>Stop / view</option>
+        </select>
+      </td>
+      <td class="col-loc">
+        <select class="inline-select" onchange="updateRec('${r.id}','city',this.value)">
+          <option value="cortina" ${r.city==='cortina'?'selected':''}>Cortina</option>
+          <option value="bolzano" ${r.city==='bolzano'?'selected':''}>Bolzano</option>
+          <option value="verona"  ${r.city==='verona'?'selected':''}>Verona</option>
+          <option value="como"    ${r.city==='como'?'selected':''}>Lake Como</option>
+        </select>
+      </td>
+      <td class="col-name"><span class="rec-name" contenteditable="true" onblur="updateRec('${r.id}','name',this.innerText)">${r.name}</span></td>
+      <td class="col-by"><span class="rec-by" contenteditable="true" onblur="updateRec('${r.id}','by',this.innerText)">${r.by}</span></td>
+      <td class="col-notes"><span class="rec-note" contenteditable="true" onblur="updateRec('${r.id}','notes',this.innerText)">${r.notes}</span></td>
+      <td class="col-del"><button class="del-btn" onclick="deleteRec('${r.id}')" title="Remove">✕</button></td>
+    </tr>
+  `).join('');
+
+  document.querySelectorAll('.rec-table th').forEach((th, i) => {
+    th.classList.remove('sorted');
+    if (['star','type','city','name','by','notes','del'][i] === sortCol) th.classList.add('sorted');
+  });
+}
+
+function setFilter(dim, val, el) {
+  if (dim === 'city') {
+    activeCity = val;
+    document.querySelectorAll('#cityPills .pill').forEach(p => p.classList.remove('active'));
+  } else {
+    activeType = val;
+    document.querySelectorAll('#typePills .pill').forEach(p => p.classList.remove('active'));
+  }
+  el.classList.add('active');
+  render();
+}
+
+function sortBy(col) {
+  sortDir = sortCol === col ? sortDir * -1 : 1;
+  sortCol = col;
+  render();
+}
+
+function toggleStar(id) {
+  const r = recs.find(x => x.id === id);
+  if (r) { r.star = !r.star; render(); scheduleSave(); }
+}
+
+function updateRec(id, field, val) {
+  const r = recs.find(x => x.id === id);
+  if (r) { r[field] = val.trim(); scheduleSave(); }
+}
+
+function deleteRec(id) {
+  recs = recs.filter(x => x.id !== id);
+  render();
+  scheduleSave();
+}
+
+function addRec() {
+  recs.unshift({ id: uid(), star: false, type: 'restaurant', city: 'cortina', name: 'New recommendation', by: '', notes: '' });
+  activeCity = 'all';
+  activeType = 'all';
+  document.querySelectorAll('#cityPills .pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#typePills .pill').forEach(p => p.classList.remove('active'));
+  document.querySelector('#cityPills .pill.all').classList.add('active');
+  document.querySelector('#typePills .pill.all').classList.add('active');
+  render();
+  scheduleSave();
+  // focus the name cell of the new row
+  setTimeout(() => {
+    const firstRow = document.querySelector('#recBody .data-row');
+    if (firstRow) firstRow.querySelector('.rec-name').focus();
+  }, 50);
+}
+
+function filterNearby(btn) {
+  const city = btn.dataset.city;
+  if (activeCity === city) {
+    activeCity = 'all';
+    document.querySelectorAll('#cityPills .pill').forEach(p => p.classList.remove('active'));
+    document.querySelector('#cityPills .pill.all').classList.add('active');
+    document.querySelectorAll('.nearby-btn').forEach(b => b.classList.remove('active'));
+  } else {
+    activeCity = city;
+    document.querySelectorAll('#cityPills .pill').forEach(p => p.classList.remove('active'));
+    const pill = document.querySelector('#cityPills .pill.' + city);
+    if (pill) pill.classList.add('active');
+    document.querySelectorAll('.nearby-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  render();
+  document.querySelector('.section-label + .filter-row') ||
+    document.querySelectorAll('.section-label')[1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── RESET ──
+function resetAll() {
+  if (!confirm('Reset everything to the original content? This cannot be undone.')) return;
+  localStorage.removeItem(LS);
+  location.reload();
+}
+
+// ── EXPORT ──
+function exportHTML() {
+  // Serialize current recs and notes into a copy of the page's HTML
+  // with inline data so friend can open it as a standalone file
+  save();
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'index.html';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exported — replace index.html in your GitHub repo with this file.');
+}
+
+// ── INIT ──
+load();
+render();
+</script>
+</body>
+</html>
