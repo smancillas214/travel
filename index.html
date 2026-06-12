@@ -65,8 +65,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
   font-family: inherit;
 }
 .toolbar-btn:hover { background: var(--bg-secondary); color: var(--text); }
-.toolbar-btn.primary { background: var(--text); color: var(--bg); border-color: transparent; }
-.toolbar-btn.primary:hover { opacity: 0.85; }
 
 /* ── HEADER ── */
 .header { margin-bottom: 2.5rem; padding-bottom: 1.75rem; border-bottom: 0.5px solid var(--border-md); }
@@ -246,7 +244,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
 
 <div class="toolbar">
   <button class="toolbar-btn" onclick="resetAll()">Reset to defaults</button>
-  <button class="toolbar-btn primary" onclick="exportHTML()">Export HTML</button>
 </div>
 
 <!-- HEADER -->
@@ -566,7 +563,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sa
 <section class="section">
   <div class="section-label">Notes</div>
   <textarea class="notes-area" id="tripNotes" placeholder="SM 06/12: Use initials + date so it's clear who wrote what.&#10;&#10;SM 06/12: Book Milan → Nice train ASAP — Trenitalia or SNCF, scenic coastal route, sit right side heading west.&#10;SM 06/12: Confirm rental car drop-off location near Como/Lecco vs. Milan."></textarea>
-  <p class="notes-hint">Edits save automatically. To sync with your friend, copy the exported HTML to GitHub.</p>
+  <p class="notes-hint">Edits save automatically in this browser.</p>
 </section>
 
 </div><!-- /page -->
@@ -834,22 +831,6 @@ function resetAll() {
   if (!confirm('Reset everything to the original content? This cannot be undone.')) return;
   localStorage.removeItem(LS);
   location.reload();
-}
-
-// ── EXPORT ──
-function exportHTML() {
-  // Serialize current recs and notes into a copy of the page's HTML
-  // with inline data so friend can open it as a standalone file
-  save();
-  const html = document.documentElement.outerHTML;
-  const blob = new Blob([html], { type: 'text/html' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'index.html';
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Exported — replace index.html in your GitHub repo with this file.');
 }
 
 // ── INIT ──
